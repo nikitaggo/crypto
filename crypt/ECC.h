@@ -10,11 +10,12 @@
 
 #include <cstdint>
 
-namespace ec {
+namespace ec
+{
 
 namespace container
 {
-// MAGIC number = "N!GR"
+// MAGIC number = "DRUG"
 
 constexpr uint32_t MAGIC =
 		0x00000001 * 'N' +
@@ -38,7 +39,8 @@ enum crypt_type
 };
 
 constexpr uint32_t HEADER_SIZE_V1 = 12;
-constexpr uint32_t FILE_METADATA_SIZE_V1_BASE = 24;
+constexpr uint32_t FILE_METADATA_SIZE_V1_BASE = 28;
+constexpr uint32_t CRC32_POLY = 0xEDB88320;
 
 #pragma pack(push, 1)
 
@@ -65,6 +67,7 @@ struct metadata
 			uint64_t orig_length;
 			uint64_t block_count;
 			uint32_t block_size;
+			uint32_t crc32;
 
 		} file;
 		struct {
@@ -81,6 +84,11 @@ struct metadata
 #pragma pack(pop)
 
 }
-
+namespace utils
+{
+void generarate_crc32_lut(uint32_t * table);
+uint32_t update_crc32(uint32_t *table, uint8_t b, uint32_t crc);
 }
+}
+
 #endif /* ECC_H_ */
